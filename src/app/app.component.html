@@ -1,0 +1,152 @@
+<div class="container">
+  <section class="demo">
+    <h1>
+      Form Wizard Demo
+    </h1>
+    <hr/>
+    <div>
+      <form-wizard (onStepChanged)="onStepChanged($event)">
+        <div class="card_block">
+          <wizard-step [title]="'Personal Info'" [isValid]="emailForm.form.valid" (onNext)="onStep1Next($event)">
+            <h1>Personal Info</h1>
+            <form #emailForm="ngForm">
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" name="name" placeholder="Enter name" [(ngModel)]="name" required>
+              </div>
+              <div class="form-group">
+                <label>Email address</label>
+                <input type="email" class="form-control" name="email" placeholder="Enter email" [(ngModel)]="data.email" required>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Enter password" [(ngModel)]="password" required>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Retype password</label>
+                <input type="password" class="form-control" name="re-type-password" placeholder="Enter Retype password" [(ngModel)]="retype-password"
+                  required>
+              </div>
+            </form>
+          </wizard-step>
+          <wizard-step [title]="'Course'" [showNext]="step2.showNext" [showPrev]="step2.showPrev" (onNext)="onStep2Next($event)">
+            <h1>Course</h1>
+            <form>
+
+              <div class="form-group">
+                <label>Course</label>
+                <select>
+                  <option value="">Select course</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Interest</label>
+                <input type="text" class="form-control" name="name" placeholder="Enter interest input" [(ngModel)]="name" required>
+              </div>
+            </form>
+          </wizard-step>
+          <wizard-step [title]="'Address'" (onNext)="onStep3Next($event)">
+            <h1>Address</h1>
+            <form>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input" name="secret" [(ngModel)]="step3.showSecret" /> I want to know the secret
+                </label>
+              </div>
+            </form>
+          </wizard-step>
+          <wizard-step [title]="'Other Info'" (onComplete)="onComplete($event)">
+            <h1>Other Info</h1>
+            <form>
+
+              <div class="row">
+
+                <div class="col-md-3">
+
+                  <h3>Select files</h3>
+                  Multiple
+                  <input type="file" ng2FileSelect [uploader]="uploader" multiple />
+                </div>
+
+                <div class="col-md-9" style="margin-bottom: 40px">
+
+                  <h3>Upload queue</h3>
+                  <p>Queue length: {{ uploader?.queue?.length }}</p>
+
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th width="50%">Name</th>
+                        <th>Size</th>
+                        <th>Progress</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of uploader.queue">
+                        <td>
+                          <strong>{{ item?.file?.name }}</strong>
+                        </td>
+                        <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                        <td *ngIf="uploader.isHTML5">
+                          <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <span *ngIf="item.isSuccess">
+                            <i class="glyphicon glyphicon-ok"></i>
+                          </span>
+                          <span *ngIf="item.isCancel">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                          </span>
+                          <span *ngIf="item.isError">
+                            <i class="glyphicon glyphicon-remove"></i>
+                          </span>
+                        </td>
+                        <td nowrap>
+                          <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+                            <span class="glyphicon glyphicon-upload"></span> Upload
+                          </button>
+                          <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel()" [disabled]="!item.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                          </button>
+                          <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
+                            <span class="glyphicon glyphicon-trash"></span> Remove
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div>
+                    <div>
+                      Queue progress:
+                      <div class="progress" style="">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+                      <span class="glyphicon glyphicon-upload"></span> Upload all
+                    </button>
+                    <button type="button" class="btn btn-warning btn-s" (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+                      <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                    </button>
+                    <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                      <span class="glyphicon glyphicon-trash"></span> Remove all
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </form>
+          </wizard-step>
+        </div>
+
+      </form-wizard>
+    </div>
+  </section>
+</div>
